@@ -52,7 +52,7 @@ Due to the extreme class imbalance, a standard random split is inappropriate. Th
 
 A version-controlled project folder has been initialized on GitHub to fulfill the reproducibility requirements. This repository contains our draft Python notebooks and separates raw data from processed outputs.
 
-- **Repository Link:** \[Insert Team GitHub URL Here\]
+- **Repository Link:** \[https://github.com/urshishir6/Credit-Card-Fraud-Detection-Project-1.git\]
 
 1. **References and AI-Use Statement**
 
