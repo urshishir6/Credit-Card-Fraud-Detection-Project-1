@@ -46,14 +46,6 @@ This project is consolidated into a single, highly reproducible Google Colab scr
 4.  Upload `creditcard.csv` directly into the Colab session storage.
 5.  Run the notebook from top to bottom. The global `RANDOM_STATE = 42` ensures results are exactly reproducible.
 
-## 📁 Repository Structure
-
-*   `/data/raw`: *(Empty)* Placeholder for `creditcard.csv` (ignored by git).
-*   `/notebooks`: Contains the primary `01_EDA_and_Preprocessing.ipynb` Colab notebook.
-*   `/outputs/figures`: PNG files of dynamically generated charts (EDA distributions, Confusion Matrices, Feature Importances, PR-Curves).
-*   `/outputs/tables`: CSV exports of evaluation metrics and cross-validation summaries.
-*   `/reports`: Contains the Week 4 Pre-Report, Week 6 Outcome Memo, and the Final Project 1 Technical Report (PDF).
-*   `environment.json`: Python and package version specifications (`scikit-learn`, `imblearn`, `xgboost`, `pandas`) used for this analysis.
 
 ## 🔍 Key Findings
 
