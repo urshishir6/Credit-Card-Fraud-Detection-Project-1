@@ -2,9 +2,20 @@
 
 **Seoul Christian University | AI & Big Data Capstone Design - Project 1**
 
-This repository contains the end-to-end predictive analytics pipeline for our Project 1 Capstone Design. The objective is to predict whether a credit card transaction is legitimate or fraudulent based on anonymized numerical features. 
+This repository contains the completed end-to-end predictive analytics pipeline for our Project 1 Capstone Design. The objective is to predict whether a credit card transaction is legitimate or fraudulent based on anonymized numerical features. 
 
-Because fraudulent transactions account for less than 0.2% of the dataset, this project focuses heavily on **imbalanced classification techniques**, rigorous preprocessing to prevent data leakage, and strict validation strategies.
+Because fraudulent transactions account for only **0.172%** of the dataset, this project focuses heavily on strict data leakage prevention, imbalanced classification techniques (SMOTE, Cost-Sensitive Learning), and Precision-Recall Area Under Curve (PR-AUC) optimization.
+
+## 🏆 Final Model Performance (Hold-Out Test Set)
+
+After evaluating candidate models via 5-fold stratified cross-validation, the final tuned models were evaluated once on the 20% hold-out test set. **XGBoost** was selected as the final production recommendation for its superior balance of catching fraud while minimizing operational false alarms.
+
+| Model | Tuned Threshold | Precision | Recall | F1-Score | PR-AUC | False Alarms |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Naive Benchmark** | - | 0.000 | 0.000 | 0.000 | 0.002 | 0 |
+| **Logistic Regression + SMOTE** | 0.97 | 0.830 | 0.768 | 0.798 | 0.687 | 15 |
+| **Random Forest (Balanced)** | 0.54 | 0.932 | 0.726 | 0.817 | 0.799 | 5 |
+| **XGBoost (scale_pos_weight)** | **0.90** | **0.960** | **0.758** | **0.847** | **0.817** | **3** |
 
 ## 👥 Team Members & Task Allocation
 
@@ -19,29 +30,37 @@ Because fraudulent transactions account for less than 0.2% of the dataset, this 
 | **Thada Magar Mansi** | Modeling Specialist 2 | Advanced candidate models (Random Forest, GBM), cross-validation. |
 | **Aayusha Bista** | Interpretation Analyst | Error analysis, feature importance extraction, responsible-use documentation. |
 
-## 📊 Dataset Description
+## 📊 Dataset Requirements
 
 *   **Source:** [Credit Card Fraud Detection Dataset (Kaggle)](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud)
 *   **Context:** The dataset contains transactions made by European cardholders in September 2013 over two days. 
-*   **Features:** 
-    *   `V1` to `V28`: Principal Component Analysis (PCA) transformed features to protect user identities.
-    *   `Time`: Seconds elapsed between the transaction and the first transaction.
-    *   `Amount`: The transaction monetary value.
-    *   `Class`: Target variable (1 = Fraudulent, 0 = Legitimate).
-*   **Challenge:** The dataset is highly unbalanced, with the positive class (frauds) accounting for only 0.172% of all transactions.
+*   **Data Handling Note:** The `creditcard.csv` dataset is approximately 150MB and is deliberately excluded from this repository via `.gitignore` to comply with GitHub file size limits and data versioning best practices. 
 
-## 🛠️ Project Structure & Workflow
+## 🚀 How to Run the Code
 
-1.  **Exploratory Data Analysis (EDA):** Visualizing the extreme class imbalance and identifying threshold markers in `Amount` and `Time`.
-2.  **Data Preprocessing:** Robust scaling of un-transformed features and strict train/test separation before applying sampling techniques (e.g., SMOTE) to prevent data leakage.
-3.  **Baseline Modeling:** Establishing a naive benchmark and an interpretable Logistic Regression model.
-4.  **Advanced Modeling:** Training and comparing Random Forest and Gradient Boosting Machines (XGBoost/LightGBM).
-5.  **Evaluation:** Measuring model performance using metrics suited for imbalanced datasets, primarily Precision, Recall, F1-Score, and Precision-Recall Area Under Curve (PR-AUC).
+This project is consolidated into a single, highly reproducible Google Colab script.
 
-## 📁 Repository Navigation
+1.  Clone this repository to your local machine.
+2.  Download the `creditcard.csv` file from the Kaggle link above.
+3.  Open the `01_EDA_and_Preprocessing.ipynb` notebook located in the `/notebooks` folder via Google Colab.
+4.  Upload `creditcard.csv` directly into the Colab session storage.
+5.  Run the notebook from top to bottom. The global `RANDOM_STATE = 42` ensures results are exactly reproducible.
 
-*   `/data`: Contains instructions for downloading the dataset (raw data is excluded from version control due to file size limits).
-*   `/notebooks`: Jupyter notebooks containing EDA, preprocessing, and modeling experiments.
-*   `/reports`: Technical reports, Pre-Report and the Final Project 1 Submission.
+## 📁 Repository Structure
+
+*   `/data/raw`: *(Empty)* Placeholder for `creditcard.csv` (ignored by git).
+*   `/notebooks`: Contains the primary `01_EDA_and_Preprocessing.ipynb` Colab notebook.
+*   `/outputs/figures`: PNG files of dynamically generated charts (EDA distributions, Confusion Matrices, Feature Importances, PR-Curves).
+*   `/outputs/tables`: CSV exports of evaluation metrics and cross-validation summaries.
+*   `/reports`: Contains the Week 4 Pre-Report, Week 6 Outcome Memo, and the Final Project 1 Technical Report (PDF).
+*   `environment.json`: Python and package version specifications (`scikit-learn`, `imblearn`, `xgboost`, `pandas`) used for this analysis.
+
+## 🔍 Key Findings
+
+*   **Leakage Prevention:** Standard scaling and resampling techniques cause data leakage if applied before splitting. This pipeline strictly applies `train_test_split` prior to `RobustScaler`, and encapsulates `SMOTE` within an `imblearn` pipeline to isolate validation folds.
+*   **The Cost of SMOTE:** While SMOTE helped the linear Logistic Regression model identify fraud (high recall), it generated an unacceptable number of False Positives.
+*   **Algorithmic Weighting:** XGBoost natively handled the extreme imbalance using `scale_pos_weight`, drastically reducing False Positives (only 3 in the test set) without relying on synthetic data generation.
+*   **Interpretation Limitations:** Features `V14`, `V4`, and `V12` dominate predictive importance across all models. However, because these are PCA-transformed variables, their real-world meaning remains obscured, limiting model explainability in a regulatory context.
+
 ## 👨🏻‍🏫 Instructor 
 *   Prof. Dinesh Paudel PHD
